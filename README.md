@@ -7,6 +7,12 @@ Detecting shot transitions can be used widely, for example assisting in a video 
 
 If you are interested in this topic you can check out the following links:
 
+- https://www.researchgate.net/publication/2857629_Comparison_of_Video_Shot_Boundary_Detection_Techniques
+
+- https://github.com/AlphaPav/Video-Shot-Detection
+
+- https://github.com/nick8592/Video-Shot-Detection
+
 ## Disclaimer
 This is purely an experimental project. I will not be performing extensive evaluation tests. The proposed methods are not advanced in any way. I will be updating this in the future.
 
@@ -22,8 +28,12 @@ python -m venv .env
 
 You will also need `ffmpeg`. If you are runnig GNU\Linux you probably have it installed already, otherwise you can get it with you package manager. For other platforms you can download it from [ffmpeg.org](https://www.ffmpeg.org/).
 
+You can now test out all the impletnted methods.
 
-## Method 1: comparing color histograms of successive frames
+- [Method 1: Comparing color histograms of successive frames](#method-1-comparing-color-histograms-of-successive-frames)
+- [Method 2: Frame Differencing and entropy](#method-2-frame-differencing-and-entropy)
+
+## Method 1: Comparing color histograms of successive frames
 
 As the title suggests, we simply compute the color histograms of each frame (one for each color channel). We then calculate the cosine distance between the histograms of successive frames.
 
