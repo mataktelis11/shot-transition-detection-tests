@@ -1,3 +1,4 @@
 sample_videos
 .env
 *.npy
+__pycache__
