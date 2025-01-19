@@ -1,46 +1,29 @@
+import argparse
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.widgets import Button
 from tqdm import tqdm
 from scipy.signal import find_peaks
 from scipy.stats import entropy
 import auxiliary as aux
 
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+                    prog='hist_cosine_dist_sd.py',
+                    description="A CLI tool performing Shot transition detection on a video file using the entropy of the motion video")
 
-def calculate_entropy(video_path):
+    parser.add_argument('-f', '--filename', type=aux.check_dir_file, required=True, 
+                        help='Provide the path of the original video file')
 
-    video, amount_of_frames, fps = aux.read_video_file(video_path)
+    parser.add_argument('-m', '--motionvideo', type=aux.check_dir_file, required=True, 
+                        help='Provide the path of the corresponding motion video file')
 
-    average_entropy_vec = np.zeros(int(amount_of_frames))
+    parser.add_argument('-p', '--prominence', type=float, default=6,
+                        help='Prominence value for find_peaks function. Default value is 6')
 
-    # use tqdm progress bar
-    for i in tqdm(range(int(amount_of_frames))):
+    return parser.parse_args()
 
-        video.set(cv2.CAP_PROP_POS_FRAMES, i)
-        _, frame = video.read()
-        
-        # https://unimatrixz.com/blog/latent-space-image-quality-with-entropy/
-
-        # get histogram of each color channel
-        hist_r = cv2.calcHist([frame],[0],None,[256],[0,256])
-        hist_g = cv2.calcHist([frame],[1],None,[256],[0,256])
-        hist_b = cv2.calcHist([frame],[2],None,[256],[0,256])
-        # get entropy of each color channel
-        image_entropy_r = entropy(hist_r / hist_r.sum(), base=2)
-        image_entropy_g = entropy(hist_g / hist_g.sum(), base=2)
-        image_entropy_b = entropy(hist_b / hist_b.sum(), base=2)
-        
-        average_entropy = np.average([image_entropy_r, image_entropy_g, image_entropy_b])
-
-        average_entropy_vec[i] = average_entropy
-
-    # save to file
-    np.save("t.npy", average_entropy_vec)
-
-
-# this is much faster
-def calculate_entropy2(video_path):
+def calculate_entropy(video_path, output_path):
 
     video, amount_of_frames, fps = aux.read_video_file(video_path)
 
@@ -78,7 +61,7 @@ def calculate_entropy2(video_path):
         pbar.update(1)
 
     # save to file
-    np.save("t.npy", average_entropy_vec)
+    np.save(output_path, average_entropy_vec)
 
 def find_shot_transitions(video_path, vector_path, prominence_value):
 
@@ -103,7 +86,9 @@ def find_shot_transitions(video_path, vector_path, prominence_value):
 
 if __name__ == "__main__":
 
+    args = parse_arguments()
+
     # read diff video and calculate entropy of each frame
-    calculate_entropy2("sample_videos/bond2_diff.mp4")
-    # use find_peaks - promi
-    find_shot_transitions("sample_videos/bond2.mp4", "t.npy", 5)
+    calculate_entropy(args.motionvideo, "entropies.npy")
+
+    find_shot_transitions(args.filename, "entropies.npy", args.prominence)
