@@ -3,7 +3,7 @@
 This is a collection of python scripts that perform automatic detection of transitions between shots in a video.
 
 ## Inspiration
-Detecting shot transitions can be used widely, for example assisting in a video edditing software or even help streaming services to place ads during the transition so the viewer won't click away!
+Detecting shot transitions can be used widely, for example assisting in a video editing software or even help streaming services to place ads during the transition so the viewer won't click away!
 
 If you are interested in this topic you can check out the following links:
 
@@ -17,18 +17,20 @@ If you are interested in this topic you can check out the following links:
 This is purely an experimental project. I will not be performing extensive evaluation tests. The proposed methods are not advanced in any way. I will be updating this in the future.
 
 ## Requirements
-Developped and tested with Python 3.13.
+Developed and tested with `Python 3.13`.
 
-Clone repo and create a virtual enviroment:
+Clone repo and create a virtual environment:
 ```
-git clone https://github.com/mataktelis11/shot-transition-detection-tests.git
-cd shot-transition-detection-tests
-python -m venv .env
+$ git clone https://github.com/mataktelis11/shot-transition-detection-tests.git
+$ cd shot-transition-detection-tests
+$ python -m venv .env
+$ source .env/bin/activate
+$ pip install -r requirements.txt
 ```
 
-You will also need `ffmpeg`. If you are runnig GNU\Linux you probably have it installed already, otherwise you can get it with you package manager. For other platforms you can download it from [ffmpeg.org](https://www.ffmpeg.org/).
+You will also need `ffmpeg`. If you are running GNU\Linux you probably have it installed already, otherwise you can get it with you package manager. For other platforms you can download it from [ffmpeg.org](https://www.ffmpeg.org).
 
-You can now test out all the impletnted methods.
+You can now test out all the implemented methods.
 
 - [Method 1: Comparing color histograms of successive frames](#method-1-comparing-color-histograms-of-successive-frames)
 - [Method 2: Frame Differencing and entropy](#method-2-frame-differencing-and-entropy)
@@ -40,14 +42,14 @@ As the title suggests, we simply compute the color histograms of each frame (one
 
 We now have three distances for each pair of frames. To simplify things we take the average of the three distances and work with it from now on.
 
-The vector containing the average distances can now be analyzed to obtain possible shot transitions. This is done by finding the peaks in the vector. We use scipy's `find_peaks` function with the `prominence` arguement. See more [here](https://docs.scipy.org/doc/scipy-1.15.0/reference/generated/scipy.signal.find_peaks.html). The prominence needs to be adjusted in order to obtain results.
+The vector containing the average distances can now be analyzed to obtain possible shot transitions. This is done by finding the peaks in the vector. We use scipy's `find_peaks` function with the `prominence` argument. See more [here](https://docs.scipy.org/doc/scipy-1.15.0/reference/generated/scipy.signal.find_peaks.html). The prominence needs to be adjusted in order to obtain results.
 
 ### Usage
 Run the script by providing an video file of your choosing:
 ```
 python  hist_cosine_dist_sd.py -f video.mp4
 ```
-You can also provide a value for the `prominence` arguement. Default value is `0.5`
+You can also provide a value for the `prominence` argument. Default value is `0.5`
 ```
 python  hist_cosine_dist_sd.py -f video.mp4 -p 0.3
 ```
@@ -63,9 +65,9 @@ Example Results:
 Video source: https://www.youtube.com/watch?v=gBcOBWq8J6w
 
 ## Method 2: Frame Differencing and entropy
-In motion detection and video compretion we often examine the differences between frames. This is called frame differencing and we can use it for transition detection.
+In motion detection and video compression we often examine the differences between frames. This is called frame differencing and we can use it for transition detection.
 
-By using `ffmpeg` we can generate a video conisting only by the frame differences. This can be called a **motion video**. By examinig the motion video we could obtain infromation about possible transitions.
+By using `ffmpeg` we can generate a video consisting only by the frame differences. This can be called a **motion video**. By examining the motion video we could obtain information about possible transitions.
 
 When a transition occurs there should be plenty of details in the motion video. We can test this concept by calculating the **entropy** of each motion frame. 
 
@@ -80,7 +82,7 @@ You can now use the python script by providing the original video as well as the
 ```
 python entropy_frame_diff.py -f video.mp4 -m motion_video.mp4
 ```
-This also uses scipy's `find_peaks` to detect the transitions. You can provide a value for the `prominence` arguement. Default value is `0.5`:
+This also uses scipy's `find_peaks` to detect the transitions. You can provide a value for the `prominence` argument. Default value is `0.5`:
 ```
 python entropy_frame_diff.py -f video.mp4 -m motion_video.mp4 -p 0.3
 ```
@@ -107,10 +109,19 @@ Run the script by providing an video file of your choosing:
 ```
 python optical_flow.py -f video.mp4
 ```
-Once again, you can also provide a value for the `prominence` arguement. Default value is `0.5`
+Once again, you can also provide a value for the `prominence` argument. Default value is `0.5`
 ```
 python optical_flow.py -f video.mp4 -p 0.3
 ```
+Example Results:
+
+<img src="readme_images/of1.png" width=70%>
+
+<img src="readme_images/of2.png" width=90%>
+<img src="readme_images/of3.png" width=90%>
+<img src="readme_images/of4.png" width=90%>
+
+Video source: https://www.youtube.com/watch?v=ZyYqyYAKGC0
 
 # Sources and credits
 Note some sources are referenced directly in the code
@@ -118,4 +129,4 @@ Note some sources are referenced directly in the code
 Will update this list as I add more stuff
 - https://docs.opencv.org/3.4/d4/dee/tutorial_optical_flow.html
 
-For the videos used in the screenshots, they are for **obviously of educational purposes - I do not own the copyrights or anything**
+For the videos used in the screenshots, they are for **educational purposes - I do not own the copyrights**
