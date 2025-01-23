@@ -85,6 +85,18 @@ This also uses scipy's `find_peaks` to detect the transitions. You can provide a
 python entropy_frame_diff.py -f video.mp4 -m motion_video.mp4 -p 0.3
 ```
 
+Example Results:
+
+<img src="readme_images/en1.png" width=70%>
+
+<img src="readme_images/en2.png" width=90%>
+<img src="readme_images/en3.png" width=90%>
+<img src="readme_images/en4.png" width=90%>
+<img src="readme_images/en5.png" width=90%>
+
+Video source: https://www.youtube.com/watch?v=AYIpQbwS3b8
+
+
 ## Method 3: Optical Flow
 In this case we perform optical flow in order to detect movement in the video. The OpenCV docs provide a working example of Dense Optical Flow. This can be used to extract the magnitude of the optical flow vectors. By calculating the average magnitude we get an estimation of the motion between two frames. If the motion is too big we can assume it is a video transition.
 
@@ -102,7 +114,8 @@ python optical_flow.py -f video.mp4 -p 0.3
 
 # Sources and credits
 Note some sources are referenced directly in the code
+
 Will update this list as I add more stuff
 - https://docs.opencv.org/3.4/d4/dee/tutorial_optical_flow.html
 
-For the videos used in the screenshots, they are for **obviously of educational purposes - I do not own the copyrights or anything**:
+For the videos used in the screenshots, they are for **obviously of educational purposes - I do not own the copyrights or anything**
